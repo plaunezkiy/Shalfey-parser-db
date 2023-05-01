@@ -1,0 +1,153 @@
+{% extends 'drugs/base.html' %} {% block content %}
+<div class="px-12 w-full flex justify-center h-full">
+  <div class="w-full flex gap-12 justify-center">
+    <div class="w-1/2 flex flex-col border border-black p-4">
+      <p class="font-medium text-lg text-center">
+        Осталось {{ awaiting }} из {{ total }}
+      </p>
+      <form class="flex flex-col gap-4 items-start" method="post">
+        {% csrf_token %}
+        <input
+          hidden
+          type="number"
+          name="drug_id"
+          value="{{drug.pk}}"
+          id="drug_id"
+        />
+        <div class="w-full">
+          <label for="name" class="block mb-1 font-medium">Название</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="border border-black bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5"
+          />
+        </div>
+
+        <div class="w-full">
+          <label for="description" class="block mb-1 font-medium"
+            >Описание</label
+          >
+          <textarea
+            type="text"
+            id="description"
+            name="description"
+            class="border border-black bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5"
+          ></textarea>
+        </div>
+        <div class="w-full">
+          <label for="warning" class="block mb-1 font-medium"
+            >Противопоказания</label
+          >
+          <textarea
+            type="text"
+            id="warning"
+            name="warning"
+            class="border border-black bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5"
+          ></textarea>
+        </div>
+        <div class="w-full flex justify-around">
+          <div
+            class="w-52"
+            x-data="{
+              tags: [],
+              tagInput: ''
+            }"
+          >
+            <label for="id_tag_input" class="block font-bold">Применения</label>
+            <input
+              sclass="rounded-lg text-gray-700 border border-black px-2"
+              class="border border-black bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5"
+              type="text"
+              name="tag_input"
+              maxlength="35"
+              id="id_tag_input"
+              placeholder="ОРВИ"
+              x-model="tagInput"
+              x-on:keydown.enter.prevent="if (!tags.includes(tagInput)) tags.push(tagInput);tagInput=''"
+            />
+            <div class="mt-2 flex flex-wrap gap-2">
+              <template x-for="tag in tags">
+                <div
+                  class="flex items-center gap-1 py-1 px-2 rounded border dark:text-gray-700 bg-blue-300 border-blue-100 dark:bg-indigo-300 dark:border-indigo-500 hover:cursor-pointer"
+                >
+                  <p x-text="tag"></p>
+                  <i
+                    class="fa-solid fa-xmark text-blue-700"
+                    x-on:click="tags = tags.filter(i => i !== tag)"
+                  ></i>
+                </div>
+              </template>
+              <input
+                hidden
+                type="text"
+                name="tags"
+                :value="tags.join(',')"
+                id="id_tags"
+              />
+            </div>
+          </div>
+          <div
+            class="w-52"
+            x-data="{
+              cats: [],
+              catInput: ''
+            }"
+          >
+            <label for="id_cat_input" class="block font-bold">Категории</label>
+            <input
+              sclass="rounded-lg text-gray-700 border border-black px-2"
+              class="border border-black bg-gray-50 text-gray-900 text-sm rounded-lg w-full p-2.5"
+              type="text"
+              name="cat_input"
+              maxlength="35"
+              id="id_cat_input"
+              placeholder="Аюрведа"
+              x-model="catInput"
+              x-on:keydown.enter.prevent="if (!cats.includes(catInput)) cats.push(catInput);catInput=''"
+            />
+            <div class="mt-2 flex flex-wrap gap-2">
+              <template x-for="cat in cats">
+                <div
+                  class="flex items-center gap-1 py-1 px-2 rounded border dark:text-gray-700 bg-blue-300 border-blue-100 dark:bg-indigo-300 dark:border-indigo-500 hover:cursor-pointer"
+                >
+                  <p x-text="cat"></p>
+                  <i
+                    class="fa-solid fa-xmark text-blue-700"
+                    x-on:click="cats = cats.filter(i => i !== cat)"
+                  ></i>
+                </div>
+              </template>
+              <input
+                hidden
+                type="text"
+                name="cats"
+                :value="cats.join(',')"
+                id="id_cats"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="w-full flex gap-8 px-4">
+          <button
+            class="disabled w-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded p-2"
+            disabled
+          >
+            Исключить
+          </button>
+          <button
+            type="submit"
+            class="w-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white rounded p-2"
+          >
+            Сохранить
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="flex flex-col border p-4 border-black">
+      <p>Card</p>
+      <iframe src="{{ drug.url }}" class="h-full w-96" frameborder="0"></iframe>
+    </div>
+  </div>
+</div>
+{% endblock %}
